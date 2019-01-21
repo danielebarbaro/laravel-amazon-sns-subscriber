@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class SnsResponse extends Model
 {
-    use Notifiable, Uuids, SoftDeletes;
+    use SoftDeletes, Uuids;
 
     /**
      * The attributes that are mass assignable.
@@ -17,9 +15,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'uuid',
         'email',
-        'password',
+        'type',
+        'source_email',
+        'source_arn',
+        'unsubscribe_url',
+        'data_payload',
+        'datetime_payload',
     ];
 
     /**
@@ -28,6 +31,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $dates = [
+        'datetime_payload',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -39,8 +43,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
-        'remember_token',
         'created_at',
         'updated_at',
         'deleted_at',
