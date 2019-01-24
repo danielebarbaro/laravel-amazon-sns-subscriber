@@ -41,7 +41,10 @@ class SnsResponseController extends Controller
                 if ($message['Type'] === 'SubscriptionConfirmation') {
                     $client = new Client();
                     $result = $client->get($message['SubscribeURL']);
-                    Log::info('SNS Subscribed: ', $result);
+                    if ($result == 1) {
+                        $now = Carbon::now()->toDateTimeString();
+                        Log::info("SNS Subscribed. {$now}");
+                    }
                 }
 
                 if ($message['Type'] === 'Notification') {

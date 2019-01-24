@@ -18,7 +18,4 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-Route::resource('sns-response', 'SnsResponseController', [
-    'only' => ['index', 'store']
-]);
+Route::post('sns-response', 'SnsResponseController@store')->name('sns-response.store');
