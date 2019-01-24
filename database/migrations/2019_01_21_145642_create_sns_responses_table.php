@@ -20,7 +20,6 @@ class CreateSnsResponsesTable extends Migration
             $table->string('type')->nullable();
             $table->string('source_email')->nullable();
             $table->string('source_arn')->nullable();
-            $table->string('unsubscribe_url')->nullable();
             $table->json('data_payload')->nullable();
             $table->dateTime('datetime_payload')->useCurrent();
             $table->timestamps();
