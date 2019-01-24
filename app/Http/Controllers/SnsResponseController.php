@@ -47,13 +47,13 @@ class SnsResponseController extends Controller
                 if ($message['Type'] === 'Notification') {
                     $this->handleNotification($message);
                 }
-            } catch (InvalidSnsMessageException $e) {
-                Log::error('SNS Message Validation Error: ' . $e->getMessage());
-                abort('404', "Invalid SNS Message Validation Exception {$e->getMessage()}");
+            } catch (InvalidSnsMessageException $exception) {
+                Log::error('SNS Message Validation Error: ' . $exception->getMessage());
+                abort('404', "Invalid SNS Message Validation Exception {$exception->getMessage()}");
             }
         } catch (\Exception $exception) {
             Log::error("SNS Message Error: {$exception->getMessage()}");
-            abort('404', "Invalid SNS Message Exception {$e->getMessage()}");
+            abort('404', "Invalid SNS Message Exception {$exception->getMessage()}");
         }
 
         return response()->json(['status' => 200, 'message' => 'success']);
