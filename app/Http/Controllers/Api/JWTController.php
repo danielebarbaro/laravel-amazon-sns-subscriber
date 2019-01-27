@@ -6,6 +6,7 @@ use App\Http\Requests\AuthRequest;
 use App\Http\Requests\RegisterAuthRequest;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use JWTAuth;
 
 class JWTController extends Controller
@@ -24,7 +25,7 @@ class JWTController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => "Failed to register user, please try again. {$exception->getMessage()}"
-            ], 500);
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
@@ -32,7 +33,7 @@ class JWTController extends Controller
             'data' => [
                 'email' => $user->email,
             ]
-        ], 201);
+        ], JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -47,7 +48,7 @@ class JWTController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'User not found'
-            ], 401);
+            ], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
@@ -66,7 +67,7 @@ class JWTController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => "User logged out."
-        ], 200);
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
