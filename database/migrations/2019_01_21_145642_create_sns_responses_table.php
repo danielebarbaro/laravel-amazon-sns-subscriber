@@ -17,6 +17,7 @@ class CreateSnsResponsesTable extends Migration
             $table->uuid('uuid')->unique();
             $table->primary('uuid');
             $table->string('email')->index();
+            $table->string('notification_type')->nullable();
             $table->string('type')->nullable();
             $table->string('source_email')->nullable();
             $table->string('source_arn')->nullable();

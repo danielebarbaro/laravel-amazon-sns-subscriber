@@ -8,6 +8,7 @@ use Aws\Sns\Message;
 use Aws\Sns\MessageValidator;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
 
@@ -81,24 +82,30 @@ class SnsResponseController extends Controller
      */
     public function destroy(SnsResponse $snsResponse)
     {
-        //
+        try {
+            $snsResponse->delete();
+        } catch (\Exception $exception) {
+            abort(JsonResponse::HTTP_INTERNAL_SERVER_ERROR, "Error: {$exception->getMessage()}");
+        }
     }
 
     /**
      * Store a SNS Response
+     * @param $notification_type
      * @param $type
      * @param $payload
      * @param $emails
      * @param $default_fields
      * @return mixed
      */
-    private function storeResponse($type, $payload, $emails, $default_fields)
+    private function storeResponse($notification_type, $type, $payload, $emails, $default_fields)
     {
         if ($emails && is_array($emails)) {
             foreach ($emails as $email) {
                 try {
                     SnsResponse::create(array_merge($default_fields, [
                         'email' => $email['emailAddress'],
+                        'notification_type' => $notification_type,
                         'type' => $type,
                         'data_payload' => $payload,
                     ]));
@@ -122,7 +129,8 @@ class SnsResponseController extends Controller
                 $response = $notification_message['bounce'];
                 $payload_data = (new Carbon($response['timestamp']));
                 $this->storeResponse(
-                    $response['bounceType'],
+                    'bounce',
+                    "{$response['bounceType']}:{$response['bounceSubType']}",
                     $message['Message'],
                     $response['bouncedRecipients'],
                     [
@@ -136,6 +144,7 @@ class SnsResponseController extends Controller
                 $response = $notification_message['complaint'];
                 $payload_data = (new Carbon($response['timestamp']));
                 $this->storeResponse(
+                    'complaint',
                     $response['complaintFeedbackType'],
                     $message['Message'],
                     $response['complainedRecipients'],
@@ -150,6 +159,7 @@ class SnsResponseController extends Controller
                 $response = $notification_message['delivery'];
                 $payload_data = (new Carbon($response['timestamp']));
                 $this->storeResponse(
+                    'delivery',
                     'success-delivery',
                     $message['Message'],
                     $response['recipients'],

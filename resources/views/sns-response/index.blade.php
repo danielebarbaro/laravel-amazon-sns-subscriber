@@ -12,22 +12,26 @@
                         <table class="table table-responsive">
                             <thead>
                             <tr>
+                                <th>@lang('default.type')</th>
+                                <th>@lang('default.notification_type')</th>
                                 <th>@lang('default.email')</th>
                                 <th>@lang('default.date')</th>
-                                <th>@lang('default.type')</th>
                             </tr>
                             </thead>
                             <tbody>
                             @forelse($sns_result as $response_result)
                                 <tr>
                                     <td>
+                                        <span class='badge badge-warning'>{{ $response_result->type }}</span>
+                                    </td>
+                                    <td>
+                                        <span class='badge badge-danger'>{{ $response_result->type }}</span>
+                                    </td>
+                                    <td>
                                         <code>{{ $response_result->source_email }}</code>
                                     </td>
                                     <td>
                                         <span>{{ optional($response_result->datetime_payload)->formatLocalized('%d %B %Y - %H:%M') }}</span>
-                                    </td>
-                                    <td>
-                                        <span class='label label-warning'>{{ $response_result->type }}</span>
                                     </td>
                                 </tr>
                             @empty

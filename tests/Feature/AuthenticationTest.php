@@ -3,32 +3,26 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\AttachesJWT;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use DatabaseMigrations, AttachesJWT;
+    use RefreshDatabase;
 
     protected $user;
-
-    protected $authRoutes;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->authRoutes = [
-            'api/logout'
-        ];
         $this->user = factory(User::class)->create(['password' => '123456']);
     }
 
     /** @test */
     public function user_can_register()
     {
-        $response = $this->json('POST', 'api/register', [
+        $response = $this->json('POST', route('api.auth.register'), [
             'name' => 'Test REGISTER ',
             'email' => 'test_register@example.com',
             'password' => '123456'
@@ -48,7 +42,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function user_can_login()
     {
-        $response = $this->json('POST', 'api/login', [
+        $response = $this->json('POST', route('api.auth.login'), [
             'email' => $this->user->email,
             'password' => '123456'
         ], ['Accept' => 'application/json']);
@@ -69,7 +63,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function user_can_not_login()
     {
-        $response = $this->json('POST', 'api/login', [
+        $response = $this->json('POST', route('api.auth.login'), [
             'email' => $this->user->email,
             'password' => 'WRONG PASSWORD'
         ], ['Accept' => 'application/json']);
@@ -90,11 +84,11 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function user_can_logout()
     {
-        $this->loginAs($this->user);
+        $this->actingAs($this->user);
 
         $response = $this->call(
             'POST',
-            'api/logout',
+            route('api.auth.logout'),
             [
                 'email' => $this->user->email,
                 'password' => '123456'
@@ -119,7 +113,7 @@ class AuthenticationTest extends TestCase
     {
         $response = $this->json(
             'POST',
-            'api/logout',
+            route('api.auth.logout'),
             [],
             ['Accept' => 'application/json']
         );

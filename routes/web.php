@@ -19,3 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('sns-response', 'SnsResponseController@store')->name('sns-response.store');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('sns-response', 'SnsResponseController@index')->name('sns-response.index');
+});
