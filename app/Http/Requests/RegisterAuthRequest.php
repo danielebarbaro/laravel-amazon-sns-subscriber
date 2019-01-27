@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterAuthRequest extends FormRequest
@@ -29,19 +28,5 @@ class RegisterAuthRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:12'
         ];
-    }
-
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @param  Validator $validator
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function failedValidation(Validator $validator)
-    {
-        return response()->json([
-            'status' => 'error',
-            'message' => $validator->messages()
-        ]);
     }
 }
