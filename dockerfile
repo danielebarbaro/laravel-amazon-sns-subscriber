@@ -41,6 +41,9 @@ COPY --chown=www-data:www-data . /var/www
 # Change current user to www-data
 USER www-data
 
+RUN composer install
+RUN php artisan key:generate
+
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]

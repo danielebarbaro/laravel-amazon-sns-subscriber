@@ -40,8 +40,11 @@ services:
     tty: true
     expose:
       - "3306"
-    env_file:
-      - .env.prod.example
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
     volumes:
       - dbdata:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
