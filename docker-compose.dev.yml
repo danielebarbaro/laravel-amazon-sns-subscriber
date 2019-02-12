@@ -18,7 +18,6 @@ services:
       - app-network
     depends_on:
       - "db"
-    command: ["sh","-c","php artisan migrate && php-fpm"]
 
   webserver:
     image: nginx:alpine
