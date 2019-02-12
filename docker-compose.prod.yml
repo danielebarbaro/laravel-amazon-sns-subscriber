@@ -1,7 +1,6 @@
 version: '3'
 services:
 
-  #PHP Service
   app:
     build:
       context: .
@@ -9,10 +8,8 @@ services:
     image: php:7.2.14-fpm
     container_name: app
     restart: unless-stopped
+    env_file: .env.prod.example
     tty: true
-    environment:
-      SERVICE_NAME: app
-      SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
       - ./:/var/www
@@ -23,7 +20,6 @@ services:
       - "db"
     command: ["sh","-c","php artisan migrate && php-fpm"]
 
-  #Nginx Service
   webserver:
     image: nginx:alpine
     container_name: webserver
@@ -37,7 +33,6 @@ services:
     networks:
       - app-network
 
-  #MySQL Service
   db:
     image: mysql:5.7.25
     container_name: db
@@ -45,25 +40,28 @@ services:
     tty: true
     ports:
       - "3306:3306"
-    environment:
-      MYSQL_DATABASE: homestead
-      MYSQL_USER: homestead
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: secret
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+    env_file:
+      - .env.prod.example
     volumes:
       - dbdata:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - app-network
 
-#Docker Networks
+  redis:
+    image: redis:5.0.3
+    container_name: redis
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
 
-#Volumes
 volumes:
   dbdata:
     driver: local
