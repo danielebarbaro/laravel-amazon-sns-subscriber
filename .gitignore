@@ -4,6 +4,7 @@
 /storage/*.key
 /vendor
 .env.prod
+docker-compose.prod.yml
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
