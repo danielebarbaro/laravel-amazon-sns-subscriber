@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SnsResponse;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $sns_result = SnsResponse::where('notification_type', 'bounce')->paginate(50);
+        return view('sns-response.index', compact('sns_result'));
     }
 }
