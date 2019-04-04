@@ -6,14 +6,13 @@
             <div class="col-xs-12 ">
                 <div class="panel panel-danger">
                     <div class="panel-heading">
-                        @lang('amazon.sns-list')
+                        AMAZON BOUNCES
                     </div>
                     <div class="panel-body">
                         <table class="table table-responsive">
                             <thead>
                             <tr>
                                 <th>@lang('default.type')</th>
-                                <th>@lang('default.notification_type')</th>
                                 <th>@lang('default.email')</th>
                                 <th>@lang('default.date')</th>
                             </tr>
@@ -23,9 +22,6 @@
                                 <tr>
                                     <td>
                                         <span class='badge badge-warning'>{{ $response_result->type }}</span>
-                                    </td>
-                                    <td>
-                                        <span class='badge badge-danger'>{{ $response_result->type }}</span>
                                     </td>
                                     <td>
                                         <code>{{ $response_result->source_email }}</code>
@@ -44,7 +40,7 @@
                             </tbody>
                         </table>
                         <div class="row">
-                            <div class="col-xs-12">
+                            <div class="col-xs-12 text-center">
                                 {{ $sns_result->links( "pagination::bootstrap-4") }}
                             </div>
                         </div>

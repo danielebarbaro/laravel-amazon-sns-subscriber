@@ -14,7 +14,6 @@
 Route::post('/login', 'Api\JWTController@login')->name('api.auth.login');
 Route::post('/register', 'Api\JWTController@register')->name('api.auth.register');
 
-
 Route::group(['middleware' => ['jwt.auth', 'jwt.refresh']], function () {
     Route::post('/logout', 'Api\JWTController@logout')->name('api.auth.logout');
 
