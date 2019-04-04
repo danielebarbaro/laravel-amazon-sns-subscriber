@@ -102,16 +102,19 @@ class SnsResponseController extends Controller
     {
         if ($emails && is_array($emails)) {
             foreach ($emails as $email) {
-                try {
-                    SnsResponse::create(array_merge($default_fields, [
-                        'email' => $email['emailAddress'],
-                        'notification_type' => $notification_type,
-                        'type' => $type,
-                        'data_payload' => $payload,
-                    ]));
-                } catch (\Exception $exception) {
-                    Log::error("Store SNS Error: {$exception->getMessage()}");
-                    abort('404', "Store SNS Error Exception: {$exception->getMessage()}");
+                $email_address = $this->getEmailAddress($email);
+                if ($email_address) {
+                    try {
+                        SnsResponse::create(array_merge($default_fields, [
+                            'email' => $email_address,
+                            'notification_type' => $notification_type,
+                            'type' => $type,
+                            'data_payload' => $payload,
+                        ]));
+                    } catch (\Exception $exception) {
+                        Log::error("Store SNS Error: {$notification_type} {$type} {$exception->getMessage()}");
+                        abort('404', "Store SNS Error Exception: {$exception->getMessage()}");
+                    }
                 }
             }
         }
@@ -173,5 +176,23 @@ class SnsResponseController extends Controller
             default:
                 break;
         }
+    }
+
+    /**
+     * @param $email
+     * @return mixed
+     */
+    private function getEmailAddress($email)
+    {
+        $email_address = false;
+        if (is_array($email) && array_key_exists('emailAddress', $email)) {
+            $email_address = $email['emailAddress'];
+        } else {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                Log::error("Store SNS Error: There is no mail!?");
+                abort('404', "Store SNS ErrorThere is no mail");
+            }
+        }
+        return $email_address;
     }
 }
